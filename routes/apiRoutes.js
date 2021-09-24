@@ -1,11 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Workout = require('../models/Workout.js');
+const connect = mongoose.connect(process.env.MONGO_DB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
-router.get('/workouts', (req, res) => {
-    console.log(new Workout({exercises: req.body.exercises, distance: req.body.distance }));
-    res.status(200).json('made it to workouts!');
+const Workout = require('../models');
+
+router.get('/workouts', async (req, res) => {
+  await connect;
+
+  const workoutData = await Workout.find({}).catch((err) => {
+    console.log(err);
+  });
+
+  res.status(200).json(workoutData);
 });
 
 module.exports = router;
