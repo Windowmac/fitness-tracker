@@ -18,4 +18,9 @@ router.get('/workouts', async (req, res) => {
   res.status(200).json(workoutData);
 });
 
+router.put('/workouts/*', (req, res) => {
+    console.log(req.body);
+    res.status(200).json(req.body);
+})
+
 module.exports = router;
