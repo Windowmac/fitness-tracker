@@ -10,7 +10,10 @@ app.use(express.urlencoded( {extended: false } ));
 
 app.use(router);
 
-mongoose.connect(process.env.MONGO_DB_URI).then( () => {
+mongoose.connect(process.env.MONGO_DB_URI, { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true 
+}).then( () => {
     app.listen(PORT);
     console.log('listening on ', PORT);
 });
