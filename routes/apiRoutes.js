@@ -19,8 +19,8 @@ router.get('/workouts', async (req, res) => {
 });
 
 router.put('/workouts/*', (req, res) => {
-    console.log(req.body);
+    console.log(req.body, req.params);
     res.status(200).json(req.body);
-})
+});
 
 module.exports = router;
