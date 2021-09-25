@@ -18,12 +18,24 @@ router.get('/workouts', async (req, res) => {
   res.status(200).json(workoutData);
 });
 
+router.get('/workouts/range', async (req, res) => {
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate()-7);
+    
+    const aggData = await Workout.aggregate([
+        {$match: {day: {$gt: weekAgo}}},
+    ]);
+
+    console.log(aggData);
+    res.status(200).json(aggData);
+});
+
 router.post('/workouts', async (req, res) => {
     await connect;
     console.log(req.body);
     const workoutData = await Workout.create(req.body);
     res.status(201).json(workoutData);
-})
+});
 
 router.put('/workouts/*', async (req, res) => {
     await connect;
