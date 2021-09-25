@@ -11,11 +11,15 @@ const Workout = require('../models');
 router.get('/workouts', async (req, res) => {
   await connect;
 
-  const workoutData = await Workout.find({}).catch((err) => {
-    console.log(err);
-  });
+//   const workoutData = await Workout.find({}).catch((err) => {
+//     console.log(err);
+//   });
 
-  res.status(200).json(workoutData);
+const aggData = await Workout.aggregate([
+    {$addFields: {totalDuration: {$sum: '$exercises.duration'}}}
+]);
+
+  res.status(200).json(aggData);
 });
 
 router.get('/workouts/range', async (req, res) => {
@@ -33,7 +37,7 @@ router.get('/workouts/range', async (req, res) => {
 router.post('/workouts', async (req, res) => {
     await connect;
     console.log(req.body);
-    const workoutData = await Workout.create(req.body);
+    const workoutData = await Workout.create({day: Date.now(), ...req.body});
     res.status(201).json(workoutData);
 });
 
