@@ -8,11 +8,11 @@ const exerciseSchema = new Schema({
     weight: Number,
     reps: Number,
     sets: Number,
+    distance: Number
   })
 const workoutSchema = new Schema({
     day: Date,
     exercises: [exerciseSchema],
-    distance: Number
 });
 
 const Workout = mongoose.model('Workout', workoutSchema);

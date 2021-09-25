@@ -24,9 +24,9 @@ router.get('/workouts/range', async (req, res) => {
     
     const aggData = await Workout.aggregate([
         {$match: {day: {$gt: weekAgo}}},
+        {$addFields: {totalDuration: {$sum: '$exercises.duration'}}}
     ]);
 
-    console.log(aggData);
     res.status(200).json(aggData);
 });
 
