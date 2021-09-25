@@ -18,7 +18,15 @@ router.get('/workouts', async (req, res) => {
   res.status(200).json(workoutData);
 });
 
+router.post('/workouts', async (req, res) => {
+    await connect;
+    console.log(req.body);
+    const workoutData = await Workout.create(req.body);
+    res.status(201).json(workoutData);
+})
+
 router.put('/workouts/*', async (req, res) => {
+    await connect;
     const dbData = await Workout.findById(req.params[0]).catch(err => {console.log(err)});
     const newExercises = dbData.exercises.concat(req.body);
     const updated = await Workout.findByIdAndUpdate(req.params[0], { exercises: newExercises }).catch(err => {console.log(err)});
