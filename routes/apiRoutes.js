@@ -18,9 +18,12 @@ router.get('/workouts', async (req, res) => {
   res.status(200).json(workoutData);
 });
 
-router.put('/workouts/*', (req, res) => {
-    console.log(req.body, req.params);
-    res.status(200).json(req.body);
+router.put('/workouts/*', async (req, res) => {
+    const dbData = await Workout.findById(req.params[0]).catch(err => {console.log(err)});
+    const newExercises = dbData.exercises.concat(req.body);
+    const updated = await Workout.findByIdAndUpdate(req.params[0], { exercises: newExercises }).catch(err => {console.log(err)});
+    console.log('newexercises are: ', newExercises)
+    res.status(201).json(updated);
 });
 
 module.exports = router;
