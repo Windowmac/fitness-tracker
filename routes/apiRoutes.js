@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connect = mongoose.connect(process.env.MONGO_DB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// const connect = mongoose.connect(process.env.MONGO_DB_URI, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
 
 const Workout = require('../models');
 
 router.get('/workouts', async (req, res) => {
-  await connect;
+  //await connect;
 
   const aggData = await Workout.aggregate([
     { $addFields: { totalDuration: { $sum: '$exercises.duration' } } },
@@ -31,14 +31,14 @@ router.get('/workouts/range', async (req, res) => {
 });
 
 router.post('/workouts', async (req, res) => {
-  await connect;
+  // await connect;
   console.log(req.body);
   const workoutData = await Workout.create({ day: Date.now(), ...req.body });
   res.status(201).json(workoutData);
 });
 
 router.put('/workouts/*', async (req, res) => {
-  await connect;
+  // await connect;
   const dbData = await Workout.findById(req.params[0]).catch((err) => {
     console.log(err);
   });
