@@ -11,43 +11,45 @@ const Workout = require('../models');
 router.get('/workouts', async (req, res) => {
   await connect;
 
-//   const workoutData = await Workout.find({}).catch((err) => {
-//     console.log(err);
-//   });
-
-const aggData = await Workout.aggregate([
-    {$addFields: {totalDuration: {$sum: '$exercises.duration'}}}
-]);
+  const aggData = await Workout.aggregate([
+    { $addFields: { totalDuration: { $sum: '$exercises.duration' } } },
+  ]);
 
   res.status(200).json(aggData);
 });
 
 router.get('/workouts/range', async (req, res) => {
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate()-7);
-    
-    const aggData = await Workout.aggregate([
-        {$match: {day: {$gt: weekAgo}}},
-        {$addFields: {totalDuration: {$sum: '$exercises.duration'}}}
-    ]);
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
 
-    res.status(200).json(aggData);
+  const aggData = await Workout.aggregate([
+    { $match: { day: { $gt: weekAgo } } },
+    { $addFields: { totalDuration: { $sum: '$exercises.duration' } } },
+  ]);
+
+  res.status(200).json(aggData);
 });
 
 router.post('/workouts', async (req, res) => {
-    await connect;
-    console.log(req.body);
-    const workoutData = await Workout.create({day: Date.now(), ...req.body});
-    res.status(201).json(workoutData);
+  await connect;
+  console.log(req.body);
+  const workoutData = await Workout.create({ day: Date.now(), ...req.body });
+  res.status(201).json(workoutData);
 });
 
 router.put('/workouts/*', async (req, res) => {
-    await connect;
-    const dbData = await Workout.findById(req.params[0]).catch(err => {console.log(err)});
-    const newExercises = dbData.exercises.concat(req.body);
-    const updated = await Workout.findByIdAndUpdate(req.params[0], { exercises: newExercises }).catch(err => {console.log(err)});
-    console.log('newexercises are: ', newExercises)
-    res.status(201).json(updated);
+  await connect;
+  const dbData = await Workout.findById(req.params[0]).catch((err) => {
+    console.log(err);
+  });
+  const newExercises = dbData.exercises.concat(req.body);
+  const updated = await Workout.findByIdAndUpdate(req.params[0], {
+    exercises: newExercises,
+  }).catch((err) => {
+    console.log(err);
+  });
+  console.log('newexercises are: ', newExercises);
+  res.status(201).json(updated);
 });
 
 module.exports = router;
